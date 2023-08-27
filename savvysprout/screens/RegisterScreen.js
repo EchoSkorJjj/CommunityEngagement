@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {Text,View,Image,TextInput,Button,TouchableOpacity} from "react-native";
 import styles from '../styles/components/RegisterStyle';
-import axios from "axios";
 
 const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
@@ -78,7 +77,6 @@ const RegisterScreen = ({navigation}) => {
           style={styles.TextInput}
           placeholder="Email"
           placeholderTextColor="#003f5c"
-          secureTextEntry={true}
           onChangeText={(email) => setEmail(email)}
         /> 
       </View> 

@@ -1,11 +1,12 @@
 import styles from '../styles/components/HomeStyle';
 
-
+import { ImageBackground } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ChatPage } from './ChatPage';
 import { CommunityPage } from './CommunityPage';
 import { UserPage } from './UserPage';
 import React, { useState } from 'react';
+import { Entypo } from '@expo/vector-icons';
 
 // import all the components we are going to use
 import {
@@ -37,51 +38,51 @@ const SwipeableCard = ({ item, removeCard, swipedDirection }) => {
     onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     onPanResponderMove: (evt, gestureState) => {
       xPosition.setValue(gestureState.dx);
-      if (gestureState.dx > SCREEN_WIDTH - 150) {
-        swipeDirection = 'Right';
-      } else if (gestureState.dx < -SCREEN_WIDTH + 150) {
-        swipeDirection = 'Left';
+      if (gestureState.dx > SCREEN_WIDTH - 250) {
+        swipeDirection = 'Like';
+      } else if (gestureState.dx < -SCREEN_WIDTH + 250) {
+        swipeDirection = 'Dislike';
       }
     },
     onPanResponderRelease: (evt, gestureState) => {
       if (
-        gestureState.dx < SCREEN_WIDTH - 150 &&
-        gestureState.dx > -SCREEN_WIDTH + 150
+        gestureState.dx < SCREEN_WIDTH - 250 &&
+        gestureState.dx > -SCREEN_WIDTH + 250
       ) {
         swipedDirection('--');
         Animated.spring(xPosition, {
           toValue: 0,
           speed: 5,
           bounciness: 10,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }).start();
-      } else if (gestureState.dx > SCREEN_WIDTH - 150) {
+      } else if (gestureState.dx > SCREEN_WIDTH - 250) {
         Animated.parallel([
           Animated.timing(xPosition, {
             toValue: SCREEN_WIDTH,
             duration: 200,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
           Animated.timing(cardOpacity, {
             toValue: 0,
             duration: 200,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
         ]).start(() => {
           swipedDirection(swipeDirection);
           removeCard();
         });
-      } else if (gestureState.dx < -SCREEN_WIDTH + 150) {
+      } else if (gestureState.dx < -SCREEN_WIDTH + 250) {
         Animated.parallel([
           Animated.timing(xPosition, {
             toValue: -SCREEN_WIDTH,
-            duration: 200,
-            useNativeDriver: false,
+            duration: 100,
+            useNativeDriver: true,
           }),
           Animated.timing(cardOpacity, {
             toValue: 0,
-            duration: 200,
-            useNativeDriver: false,
+            duration: 100,
+            useNativeDriver: true,
           }),
         ]).start(() => {
           swipedDirection(swipeDirection);
@@ -93,17 +94,31 @@ const SwipeableCard = ({ item, removeCard, swipedDirection }) => {
 
   return (
     <Animated.View
-      {...panResponder.panHandlers}
-      style={[
-        styles.cardStyle,
-        {
-          backgroundColor: item.backgroundColor,
-          opacity: cardOpacity,
-          transform: [{ translateX: xPosition }, { rotate: rotateCard }],
-        },
-      ]}>
-      <Text style={styles.cardTitleStyle}> {item.cardTitle} </Text>
-    </Animated.View>
+    {...panResponder.panHandlers}
+    style={[
+      styles.cardStyle,
+      {
+        transform: [{ translateX: xPosition }, { rotate: rotateCard }],
+      },
+    ]}
+  >
+      <ImageBackground
+        source={item.imageUrl}
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'flex-end', // Center the title vertically
+          // alignItems: 'center', // Center the title horizontally
+        }}
+      >
+        <View style={styles.cardInfoContainer}>
+          <Text style={styles.cardTitleStyle}>{item.name},{item.age}</Text>
+          <Text style={styles.cardTitleStyle}>{item.location}</Text>
+          <Text style={styles.cardTitleStyle}>Skills: {item.skills}</Text>
+        </View>
+      </ImageBackground>
+  </Animated.View>
+
   );
 };
 
@@ -132,13 +147,9 @@ function SwipePage() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={styles.titleText}>
-        React Native Swipeable Card View UI like Tinder
-      </Text>
-      <Text style={styles.swipeText}>
-        Last Card Swipe Direction was{'\n'}
+      {/* <Text style={styles.swipeText}>
         {swipeDirection}
-      </Text>
+      </Text> */}
       <View style={styles.container}>
         {sampleCardArray.map((item, key) => (
           <SwipeableCard
@@ -146,10 +157,11 @@ function SwipePage() {
             item={item}
             removeCard={() => removeCard(item.id)}
             swipedDirection={lastSwipedDirection}
+            style={styles.cardTitleStyle}
           />
         ))}
         {noMoreCard ? (
-          <Text style={{ fontSize: 22, color: '#000' }}>No Cards Found.</Text>
+          <Text style={styles.cardTitleStyle}>No Cards Found.</Text>
         ) : null}
       </View>
     </SafeAreaView>
@@ -159,14 +171,43 @@ function SwipePage() {
 
   function MyTabs() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="Swipe" component={SwipePage} />
-        <Tab.Screen name="Chat" component={ChatPage} />
-        <Tab.Screen name="Communities" component={CommunityPage} />
-        <Tab.Screen name="User" component={UserPage} />
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { backgroundColor: '#ffcc15' },
+        }}
+      >
+        <Tab.Screen
+          name="Swipe"
+          component={SwipePage}
+          options={{
+            headerStyle: { backgroundColor: '#ffcc15' }, // Set the header background color for Swipe tab
+          }}
+        />
+        <Tab.Screen
+          name="Chat"
+          component={ChatPage}
+          options={{
+            headerStyle: { backgroundColor: '#ffcc15' }, // Set the header background color for Chat tab
+          }}
+        />
+        <Tab.Screen
+          name="Communities"
+          component={CommunityPage}
+          options={{
+            headerStyle: { backgroundColor: '#ffcc15' }, // Set the header background color for Communities tab
+          }}
+        />
+        <Tab.Screen
+          name="User"
+          component={UserPage}
+          options={{
+            headerStyle: { backgroundColor: '#ffcc15' }, // Set the header background color for User tab
+          }}
+        />
       </Tab.Navigator>
     );
   }
+  
 
 function HomeScreen() {
   return (
@@ -180,26 +221,54 @@ const DEMO_CONTENT = [
     id: '1',
     cardTitle: 'Card 1',
     backgroundColor: '#FFC107',
+    imageUrl: require('../assets/timmy.jpg'),
+    name: 'Timothy Chalamet',
+    age: 30,
+    location: 'Beauty World',
+    skills: 'Acting, Flying Airplanes',
   },
   {
     id: '2',
     cardTitle: 'Card 2',
     backgroundColor: '#ED2525',
+    imageUrl: require('../assets/ryan.jpg'),
+    name: 'Ryan Reynolds',
+    age: 35,
+    location: 'Punggol',
+    skills: 'Football, JavaScript',
   },
   {
     id: '3',
     cardTitle: 'Card 3',
     backgroundColor: '#E7088E',
+    imageUrl: require('../assets/scarjo.jpg'),
+    name: 'Scarlet Johansson',
+    age: 25,
+    location: 'Changi',
+    skills: 'Java, Italian Cuisine',
+
   },
   {
     id: '4',
     cardTitle: 'Card 4',
     backgroundColor: '#00BCD4',
+    imageUrl: require('../assets/Jisoo.jpg'),
+    name: 'Jisoo',
+    age: 25,
+    location: 'Serangoon',
+    skills: 'Singing, Kpop Dance',
+
   },
   {
     id: '5',
     cardTitle: 'Card 5',
     backgroundColor: '#FFFB14',
+    imageUrl: require('../assets/eric.jpg'),
+    name: 'Eric Cartman',
+    age: 10,
+    location: 'Jurong',
+    skills: 'Woodwork',
+
   },
 ].reverse();
 

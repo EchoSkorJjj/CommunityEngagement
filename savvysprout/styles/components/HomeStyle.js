@@ -15,16 +15,21 @@ const styles = StyleSheet.create({
       paddingVertical: 20,
     },
     cardStyle: {
-      width: '75%',
-      height: '45%',
+      width: '95%',
+      height: '97%',
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
-      borderRadius: 7,
+      borderRadius: 9,
     },
     cardTitleStyle: {
       color: '#fff',
-      fontSize: 24,
+      fontSize: 22,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Set the background color
+      paddingLeft: 5,
+      paddingBottom: 3,
+      paddingTop:5
+
     },
     swipeText: {
       fontSize: 18,
