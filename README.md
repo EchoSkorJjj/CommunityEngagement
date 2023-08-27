@@ -12,8 +12,6 @@
 ## Setup
 1. Clone the repository:   
 ```
-
-```
 git clone https://github.com/SathwikChiluveru/savvysproutapp.git
 ```
 2. Navigate to the directory: 
@@ -33,8 +31,5 @@ This app is only available on IOS.
 ```
 npx expo start
 ```
-
-```
-
 3. Scan the QR code produced and you will be redirected to the app.
 The authentication flow in this app was developed based on the guidelines and examples provided in the React Navigation Auth Flow Documentation. (https://reactnavigation.org/docs/auth-flow/)
